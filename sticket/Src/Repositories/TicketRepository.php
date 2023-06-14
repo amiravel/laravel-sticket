@@ -17,5 +17,11 @@ class TicketRepository extends BaseRepository implements TicketRepositoryInterfa
     }
 
 
+    public function userTickets(int $userId)
+    {
+        $this->query->where('user_id', $userId);
+        return $this->list();
+    }
+
 
 }

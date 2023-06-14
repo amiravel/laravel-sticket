@@ -34,10 +34,10 @@ class Ticket extends Model
     }
 
     public function getPriorityColorAttribute(){
-        return TicketPriority::from($this->priority)->color();
+        return TicketPriority::from($this->priority_text)->color();
     }
 
     public function getPriorityTextAttribute(){
-        return TicketPriority::from($this->priority)->value;
+        return TicketPriority::getOrderValue($this->priority);
     }
 }

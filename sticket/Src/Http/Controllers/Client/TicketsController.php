@@ -1,18 +1,15 @@
 <?php
 
-namespace Sticket\Src\Http\Controllers;
+namespace Sticket\Src\Http\Controllers\Client;
 
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Sticket\Src\Filters\TicketsFilter;
 use Sticket\Src\Repositories\Contracts\TicketRepositoryInterface;
-use Sticket\Src\Response\Category\CategoryResponse;
 use Sticket\Src\Response\Ticket\TicketResponse;
 use Sticket\Src\Service\Contracts\TicketServiceInterface;
 
 class TicketsController extends Controller
 {
-
 
     /**
      * @var TicketRepositoryInterface
@@ -24,20 +21,30 @@ class TicketsController extends Controller
      */
     private TicketsFilter $filter;
 
+    /**
+     * @var TicketServiceInterface
+     */
+    private TicketServiceInterface $ticketService;
+
+
     public function __construct(
-        TicketRepositoryInterface $ticketRepository,
-        TicketsFilter $filter
+        TicketServiceInterface $ticketService,
+        TicketRepositoryInterface $ticketRepository
     )
     {
+        $this->ticketService = $ticketService;
         $this->ticketRepository = $ticketRepository;
-        $this->filter = $filter;
     }
 
     public function index()
     {
-        $tickets = $this->ticketRepository->setFilter($this->filter)->list();
+        $tickets = $this->ticketService->userTickets(auth()->id() ?? 1);
 
         return TicketResponse::list($tickets);
+    }
+
+    public function create(){
+        return view('Sticket::client.tickets.create');
     }
 
     public function show(int $id)

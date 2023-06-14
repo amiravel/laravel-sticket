@@ -15,5 +15,10 @@ return [
     'tickets' => [
         'api' => \Sticket\Src\Response\Ticket\JsonResponse::class,
         'web' => \Sticket\Src\Response\Ticket\WebResponse::class
+    ],
+    'messages' => [
+        'api' => \Sticket\Src\Response\Message\JsonResponse::class,
+        'web' => \Sticket\Src\Response\Message\WebResponse::class
     ]
+
 ];
