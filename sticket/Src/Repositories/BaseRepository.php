@@ -4,6 +4,8 @@
 namespace Sticket\Src\Repositories;
 
 
+use http\Exception\InvalidArgumentException;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Sticket\Src\Filters\Filter;
@@ -18,6 +20,8 @@ abstract class BaseRepository implements BaseRepositoryInterface
     public const PER_PAGE = 10;
 
     public Builder $query;
+
+    public Filter $filter;
 
     public function __construct(Model $model)
     {
@@ -35,7 +39,8 @@ abstract class BaseRepository implements BaseRepositoryInterface
         return $this->query->find($id);
     }
 
-    public function with(array $relations){
+    public function with(array $relations)
+    {
         $this->query->with($relations);
 
         return $this;
@@ -58,13 +63,14 @@ abstract class BaseRepository implements BaseRepositoryInterface
         return $this;
     }
 
-    public function setQuery($query){
+    public function setQuery($query)
+    {
         $this->query = $query;
     }
 
     public function paginate(?int $page = 1)
     {
-        return $this->model->newQuery()->paginate(
+        return $this->query->paginate(
             self::PER_PAGE,
             ['*'],
             'page',
@@ -72,20 +78,35 @@ abstract class BaseRepository implements BaseRepositoryInterface
         );
     }
 
-    public function list(Filter $filter)
+    public function list()
     {
-        return $filter->apply($this->model->newQuery())
+        throw_if(empty($this->filter), BindingResolutionException::class,  'filter property not initialized');
+
+        return $this->filter->apply($this->query)
             ->paginate(
                 self::PER_PAGE,
                 ['*'],
                 'page',
-                $filter->request->get('page')
+                $this->filter->request->get('page')
             )
-            ->appends($filter->request->all());
+            ->appends($this->filter->request->all());
     }
 
     public function first()
     {
         return $this->query->first();
     }
+
+    public function setFilter(Filter $filter)
+    {
+        $this->filter = $filter;
+
+        return $this;
+    }
+
+    public function all()
+    {
+        return $this->query->get();
+    }
+
 }

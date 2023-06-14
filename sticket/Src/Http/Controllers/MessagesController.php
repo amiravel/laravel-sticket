@@ -3,64 +3,39 @@
 namespace Sticket\Src\Http\Controllers;
 
 use Illuminate\Routing\Controller;
-use Sticket\Src\Http\Requests\NewCategoryRequest;
-use Sticket\Src\Http\Requests\UpdateCategoryRequest;
-use Sticket\Src\Repositories\Contracts\CategoryRepositoryInterface;
-use Sticket\Src\Response\Category\CategoryResponse;
+use Sticket\Src\Http\Requests\NewMessageRequest;
+use Sticket\Src\Repositories\Contracts\MessageRepositoryInterface;
+use Sticket\Src\Response\Message\MessageResponse;
 
 class MessagesController extends Controller
 {
 
     /**
-     * @var CategoryRepositoryInterface
+     * @var MessageRepositoryInterface
      */
-    private CategoryRepositoryInterface $categoryRepository;
+    private MessageRepositoryInterface $messageRepository;
 
-    public function __construct(CategoryRepositoryInterface $categoryRepository)
+    public function __construct(MessageRepositoryInterface $messageRepository)
     {
-        $this->categoryRepository = $categoryRepository;
-    }
-
-    public function index()
-    {
-        $categories = $this->categoryRepository->paginate(request('page'));
-
-//        return CategoryResponse::list($categories);
-        return CategoryResponse::list($categories);
-//        return view('Sticket::categories.index', ['categories' => $categories]);
+        $this->messageRepository = $messageRepository;
     }
 
 
-    public function create()
+    public function store(NewMessageRequest $request, int $ticketId)
     {
-        return view('Sticket::categories.create');
-    }
+        $this->messageRepository->create([
+            'user_id' => auth()->id() ?? 1,
+            'ticket_id' => $ticketId,
+            'content' => $request->get('content')
+        ]);
 
-    public function store(NewCategoryRequest $request)
-    {
-        $this->categoryRepository->create($request->validated());
-
-        return CategoryResponse::success();
-    }
-
-    public function edit(int $id)
-    {
-        $category = $this->categoryRepository->find($id);
-
-        return view('Sticket::categories.edit', ['category' => $category]);
-    }
-
-    public function update(int $id, UpdateCategoryRequest $request)
-    {
-        $this->categoryRepository->update($id, $request->only('name'));
-
-        return CategoryResponse::success();
+        return MessageResponse::success();
     }
 
     public function destroy(int $id)
     {
-        $this->categoryRepository->delete($id);
+        $this->messageRepository->delete($id);
 
-        return CategoryResponse::success();
+        return MessageResponse::success();
     }
 }

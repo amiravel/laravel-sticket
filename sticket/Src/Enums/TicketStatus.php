@@ -23,7 +23,6 @@ enum TicketStatus: string
             TicketStatus::WAITING => 'bg-warning',
             TicketStatus::RESPONSED => 'bg-info',
             TicketStatus::CLOSED => 'bg-danger',
-
         };
     }
 

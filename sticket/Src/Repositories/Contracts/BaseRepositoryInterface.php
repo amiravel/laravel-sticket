@@ -21,10 +21,13 @@ interface BaseRepositoryInterface
 
     public function paginate(int $page = 1);
 
-    public function list(Filter $filter);
+    public function list();
 
     public function with(array $relations);
 
     public function first();
 
+    public function setFilter(Filter $filter);
+
+    public function all();
 }

@@ -13,10 +13,19 @@ enum TicketPriority: string {
 
     public static function getOrder(self $value){
         return match($value){
-            TicketPriority::Urgent => 4,
+            TicketPriority::URGENT => 4,
             TicketPriority::HIGH => 3,
             TicketPriority::MEDIUM => 2,
             TicketPriority::LOW => 1,
+        };
+    }
+
+    public static function getOrderValue($value){
+        return match($value){
+            4 => 'urgent',
+            3 => 'high',
+            2 => 'medium',
+            1 => 'low',
         };
     }
 
@@ -28,7 +37,7 @@ enum TicketPriority: string {
 
     public static function getColor($priority){
         return match($priority){
-            TicketPriority::Urgent => 'bg-danger',
+            TicketPriority::URGENT => 'bg-danger',
             TicketPriority::HIGH => 'bg-warning',
             TicketPriority::MEDIUM => 'bg-info',
             TicketPriority::LOW => 'bg-success',
