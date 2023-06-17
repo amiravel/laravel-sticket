@@ -4,6 +4,7 @@ namespace Sticket\Src\Http\Controllers\Client;
 
 use Illuminate\Routing\Controller;
 use Sticket\Src\Filters\TicketsFilter;
+use Sticket\Src\Http\Requests\NewTicketRequest;
 use Sticket\Src\Repositories\Contracts\TicketRepositoryInterface;
 use Sticket\Src\Response\Ticket\TicketResponse;
 use Sticket\Src\Service\Contracts\TicketServiceInterface;
@@ -45,6 +46,13 @@ class TicketsController extends Controller
 
     public function create(){
         return view('Sticket::client.tickets.create');
+    }
+
+    public function store(NewTicketRequest $request)
+    {
+        $this->ticketService->create(auth()->id() ?? 1, $request->validated());
+
+        return TicketResponse::success();
     }
 
     public function show(int $id)

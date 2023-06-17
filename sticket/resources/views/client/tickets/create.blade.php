@@ -8,7 +8,7 @@
 
         <div class="row">
             <div class="col-12">
-                <form action="{{route('client.tickets.store')}}">
+                <form action="{{route('client.tickets.store')}}" method="POST">
                     @csrf
                     <div class="form-group">
                         <label for="title">title</label>
@@ -17,8 +17,8 @@
                     @categories
                     @priorities
                     <div class="form-group mt-4">
-                        <label for="content">content</label>
-                        <textarea name="content" class="form-control"></textarea>
+                        <label for="body">content</label>
+                        <textarea name="body" class="form-control"></textarea>
                     </div>
                     <div class="form-group mt-4">
                         <input type="submit" class="btn btn-success w-25" value="send">

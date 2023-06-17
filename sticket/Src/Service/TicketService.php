@@ -34,4 +34,15 @@ class TicketService implements TicketServiceInterface
             ->userTickets($userId);
     }
 
+    public function create(int $userId, array $data)
+    {
+        $this->ticketRepository->create([
+            'user_id' => $userId,
+            'category_id' => $data['category_id'],
+            'priority' => $data['priority'],
+            'body' => $data['body'],
+            'title' => $data['title'],
+        ]);
+    }
+
 }

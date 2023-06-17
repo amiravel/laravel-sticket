@@ -16,12 +16,12 @@ return new class extends Migration
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('operator_id')->constrained('users');
+            $table->foreignId('operator_id')->nullable()->constrained('users');
             $table->foreignId('category_id')->constrained();
             $table->text('body');
             $table->string('title');
             $table->string('status', 50)->default(TicketStatus::OPEN->value);
-            $table->unsignedInteger('priority')->default(TicketPriority::LOW->value);
+            $table->unsignedInteger('priority')->default(TicketPriority::LOW->order());
             $table->timestamp('closed_at')->nullable();
             $table->timestamps();
         });
