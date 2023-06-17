@@ -12,6 +12,8 @@ class Ticket extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     // protected $appends = [];
 
     public function category()
